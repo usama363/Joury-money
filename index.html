@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>💸👑 فلوس جوريييي</title>
+<style>
+  :root{--bg:#0f1724;--card:#0b1220;--accent:#ffd166;--text:#e6eef8}
+  body{margin:0;padding:28px;font-family:"Segoe UI", Tahoma, "Noto Naskh Arabic", sans-serif;background:linear-gradient(180deg,#071029 0%, #0b1320 100%);color:var(--text);direction:rtl}
+  .wrap{max-width:680px;margin:0 auto;background:rgba(255,255,255,0.03);padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+  h1{margin:0 0 12px;font-size:20px}
+  .stage{display:flex;flex-direction:column;align-items:center;gap:12px}
+  .bill{
+    width:260px;height:120px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));cursor:pointer;
+    user-select:none;position:relative;overflow:hidden;transition:transform .25s ease;
+    box-shadow:0 8px 20px rgba(0,0,0,0.5)
+  }
+  .bill:hover{transform:translateY(-6px)}
+  .bill img{max-width:90%;max-height:90%;pointer-events:none}
+  .bill .label{position:absolute;bottom:8px;left:10px;background:rgba(0,0,0,0.3);padding:6px 10px;border-radius:8px;font-weight:700}
+  .btnHint{font-size:15px;opacity:0.95}
+  .totalBox{width:100%;background:#071022;padding:12px;border-radius:10px;display:flex;align-items:center;justify-content:space-between}
+  .totalTxt{font-size:14px;opacity:0.9}
+  .totalValue{font-size:24px;font-weight:900}
+  .small{font-size:13px;color:#9fb3d6}
+  .fadeOut{animation: fadeOut .45s forwards}
+  .fadeIn{animation: fadeIn .45s forwards}
+  @keyframes fadeOut{from{opacity:1;transform:translateY(0) scale(1)} to{opacity:0;transform:translateY(-24px) scale(.85)}}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(20px) scale(.98)} to{opacity:1;transform:translateY(0) scale(1)}}
+  .finalMsg{margin-top:14px;padding:12px;border-radius:10px;background:#0c2a1b;color:#dff7e6;display:none;font-weight:700;text-align:center}
+  .show{display:block;animation:fadeIn .7s forwards}
+  @media (max-width:520px){ .bill{width:92%;height:110px} }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="stage">
+      <div id="billContainer" class="bill" title="اضغط هنا">
+        <div class="label" id="billLabel">اضغط</div>
+      </div>
+
+      <div class="btnHint small">💸👑 دوسي هنا عشان تاخدي فلوسك يا ملكة</div>
+
+      <div class="totalBox">
+        <div>
+          <div class="totalTxt">المبلغ اللي تم تحويله علي رقم 01122187146</div>
+          <div class="totalValue" id="totalValue">0 <span class="small">جنيه</span></div>
+        </div>
+        <div class="small">الإجمالي المطلوب: <strong>570 جنيه</strong></div>
+      </div>
+
+      <div id="finalMsg" class="finalMsg">ملكيش حاجة عندي كده عشان تعرفي بس إني قد كلامي 😏​</div>
+
+    </div>
+  </div>
+
+<script>
+const bills = [
+  {id:'b200a', value:200, img:'images/egp200.jpg'},
+  {id:'b100a', value:100, img:'images/egp100.jpg'},
+  {id:'b100b', value:100, img:'images/egp100.jpg'},
+  {id:'b50a',  value:50,  img:'images/egp50.jpg'},
+  {id:'b50b',  value:50,  img:'images/egp50.jpg'},
+  {id:'b20a',  value:20,  img:'images/egp20.jpg'},
+  {id:'b20b',  value:20,  img:'images/egp20.jpg'},
+  {id:'b10a',  value:10,  img:'images/egp10.jpg'},
+  {id:'b10b',  value:10,  img:'images/egp10.jpg'},
+  {id:'b5a',   value:5,   img:'images/egp5.jpg'},
+  {id:'b5b',   value:5,   img:'images/egp5.jpg'}
+];
+
+let index = 0;
+let total = 0;
+const billContainer = document.getElementById('billContainer');
+const totalValue = document.getElementById('totalValue');
+const finalMsg = document.getElementById('finalMsg');
+
+function showCurrent(){
+  billContainer.innerHTML = '';
+  const b = bills[index];
+  if(!b) return;
+  const im = document.createElement('img');
+  im.src = b.img;
+  im.alt = b.value + ' جنيه';
+  billContainer.appendChild(im);
+  const lbl = document.createElement('div');
+  lbl.className = 'label';
+  lbl.textContent = 'Click Here';
+  billContainer.appendChild(lbl);
+  billContainer.classList.remove('fadeOut');
+  void billContainer.offsetWidth;
+  billContainer.classList.add('fadeIn');
+}
+
+billContainer.addEventListener('click', ()=>{
+  if(index >= bills.length) return;
+
+  const b = bills[index];
+  billContainer.classList.remove('fadeIn');
+  billContainer.classList.add('fadeOut');
+
+  setTimeout(()=>{
+    total += b.value;
+    updateTotalAnimated(total);
+    index++;
+
+    if (index < bills.length) {
+      showCurrent();
+    } else {
+      // بعد آخر ورقة فلوس
+      setTimeout(() => {
+        // نخلي العنصر يظهر تاني
+        billContainer.classList.remove('fadeOut');
+        billContainer.classList.add('fadeIn');
+        billContainer.innerHTML = `
+          <div style="
+            font-weight:800;
+            font-size:22px;
+            text-align:center;
+            animation: fadeIn .8s forwards;
+            color:#ffd166;
+            text-shadow:0 0 10px rgba(255,209,102,.7);
+          ">
+            مستنية فلوس تاني ولا إيه؟ 🤨​
+          </div>`;
+        finalMsg.classList.add('show');
+        totalValue.innerHTML = total + ' <span class="small">جنيه</span>';
+      }, 500);
+    }
+  }, 420);
+});
+
+
+
+let animReq = null;
+function updateTotalAnimated(target){
+  cancelAnimationFrame(animReq);
+  const start = Number(totalValue.textContent.replace(/\D/g,'')) || 0;
+  const duration = 600;
+  const t0 = performance.now();
+  function step(now){
+    const dt = Math.min(1, (now - t0) / duration);
+    const ease = 1 - Math.pow(1 - dt, 3);
+    const cur = Math.floor(start + (target - start) * ease);
+    totalValue.innerHTML = cur + ' <span class="small">جنيه</span>';
+    if(dt < 1) animReq = requestAnimationFrame(step);
+  }
+  animReq = requestAnimationFrame(step);
+}
+
+showCurrent();
+</script>
+</body>
+</html>
